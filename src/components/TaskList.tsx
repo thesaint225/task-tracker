@@ -18,6 +18,13 @@ export default function TaskList() {
     setTasks([...tasks, { title: task, completed: false }]);
     setTask(''); //clear input
   }
+
+  function handleComplete(index: number) {
+    const updatedTask = tasks.map((t, i) =>
+      i == index ? { ...t, completed: true } : t
+    );
+    setTasks(updatedTask);
+  }
   return (
     <div>
       <input
