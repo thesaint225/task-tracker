@@ -25,6 +25,13 @@ export default function TaskList() {
     );
     setTasks(updatedTask);
   }
+
+  function handleDelete(index: number) {
+    const updatedTask = tasks.filter((_, i) => i !== index);
+
+    setTasks(updatedTask);
+  }
+
   return (
     <div>
       <input
@@ -36,7 +43,14 @@ export default function TaskList() {
       <button onClick={handleAddTask}> Add Task</button>
       <ul>
         {tasks.map((t, index) => (
-          <li key={index}>{t.title}</li>
+          <li
+            key={index}
+            style={{ textDecoration: t.completed ? 'line-through' : 'none' }}
+          >
+            {t.title}
+            <button onClick={() => handleComplete(index)}>complete</button>
+            <button onClick={() => handleDelete(index)}>delete</button>
+          </li>
         ))}
       </ul>
     </div>
