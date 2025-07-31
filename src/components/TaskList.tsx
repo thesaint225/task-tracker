@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 type Task = {
+  id: number;
   title: string;
   completed: boolean;
 };
@@ -15,21 +16,25 @@ export default function TaskList() {
 
   function handleAddTask() {
     if (task.trim() === '') return;
-    setTasks([...tasks, { title: task, completed: false }]);
+    const newTask = {
+      id: Date.now(),
+      title: task,
+      completed: false,
+    };
+    setTasks((prevTasks) => [...prevTasks, newTask]);
     setTask(''); //clear input
   }
 
-  function handleComplete(index: number) {
-    const updatedTask = tasks.map((t, i) =>
-      i == index ? { ...t, completed: true } : t
+  function handleComplete(taskId: number) {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, completed: true } : task
+      )
     );
-    setTasks(updatedTask);
   }
 
-  function handleDelete(index: number) {
-    const updatedTask = tasks.filter((_, i) => i !== index);
-
-    setTasks(updatedTask);
+  function handleDelete(taskId: number) {
+    setTasks((updatedTask) => updatedTask.filter((task) => task.id !== taskId));
   }
 
   return (
@@ -42,14 +47,14 @@ export default function TaskList() {
       />
       <button onClick={handleAddTask}> Add Task</button>
       <ul>
-        {tasks.map((t, index) => (
+        {tasks.map((task, _) => (
           <li
-            key={index}
-            style={{ textDecoration: t.completed ? 'line-through' : 'none' }}
+            key={task.id}
+            style={{ textDecoration: task.completed ? 'line-through' : 'none' }}
           >
-            {t.title}
-            <button onClick={() => handleComplete(index)}>complete</button>
-            <button onClick={() => handleDelete(index)}>delete</button>
+            {task.title}
+            <button onClick={() => handleComplete(task.id)}>complete</button>
+            <button onClick={() => handleDelete(task.id)}>delete</button>
           </li>
         ))}
       </ul>
