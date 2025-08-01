@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Task = {
   id: number;
@@ -10,6 +10,15 @@ export default function TaskList() {
   const [task, setTask] = useState(''); //create a state variable for input
   const [tasks, setTasks] = useState<Task[]>([]); //to store the individual task from the user
   const [filter, setFilter] = useState('all');
+
+  useEffect(() => {
+    const savedTasks = localStorage.getItem('task');
+    if (savedTasks) {
+      console.log('Loaded from localStorage', savedTasks);
+      setTasks(JSON.parse(savedTasks));
+    }
+  }, []);
+
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     setTask(event.target.value);
     console.log(event.target.value);
