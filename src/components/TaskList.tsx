@@ -9,6 +9,7 @@ type Task = {
 export default function TaskList() {
   const [task, setTask] = useState(''); //create a state variable for input
   const [tasks, setTasks] = useState<Task[]>([]); //to store the individual task from the user
+  const [filter, setFilter] = useState('all');
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     setTask(event.target.value);
     console.log(event.target.value);
@@ -37,6 +38,12 @@ export default function TaskList() {
     setTasks((updatedTask) => updatedTask.filter((task) => task.id !== taskId));
   }
 
+  const filterTasks = tasks.filter((task) => {
+    if (filter === 'active') return !task.completed;
+    if (filter == 'completed') return task.completed;
+    return true; //for 'all'
+  });
+
   return (
     <div>
       <input
@@ -47,7 +54,7 @@ export default function TaskList() {
       />
       <button onClick={handleAddTask}> Add Task</button>
       <ul>
-        {tasks.map((task, _) => (
+        {filterTasks.map((task, _) => (
           <li
             key={task.id}
             style={{ textDecoration: task.completed ? 'line-through' : 'none' }}
@@ -58,6 +65,9 @@ export default function TaskList() {
           </li>
         ))}
       </ul>
+      <button onClick={() => setFilter('all')}>All</button>
+      <button onClick={() => setFilter('active')}>Active</button>
+      <button onClick={() => setFilter('completed')}>Completed</button>
     </div>
   );
 }
