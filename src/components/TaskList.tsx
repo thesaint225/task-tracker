@@ -1,3 +1,4 @@
+import { error } from 'console';
 import { useEffect, useState } from 'react';
 
 type Task = {
@@ -8,15 +9,30 @@ type Task = {
 
 export default function TaskList() {
   const [task, setTask] = useState(''); //create a state variable for input
-  const [tasks, setTasks] = useState<Task[]>(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    try {
-      return savedTasks ? JSON.parse(savedTasks) : [];
-    } catch (error) {}
-  });
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [storageError, setStorageError] = useState<string | null>(null);
+
   const [filter, setFilter] = useState('all');
   const [editingId, setEditingId] = useState<number | null>(null); // track which task is being edited
   const [editTitle, setEditTitle] = useState(''); //store the tempory title
+  // load tasks from localStorage   (run once)
+  useEffect(() => {
+    try {
+      const savedTasks = localStorage.getItem('tasks');
+      if (savedTasks) {
+        const parsed = JSON.parse(savedTasks);
+        if (Array.isArray(parsed)) {
+          setTasks(parsed);
+        } else {
+          throw new Error('Data is not an array');
+        }
+      }
+    } catch (error) {
+      console.error('failed to load tasks: ', error);
+      setStorageError('failed to load your task ....');
+      setTasks([]);
+    }
+  });
 
   // save to localStorage whenever tasks change
 
@@ -80,6 +96,15 @@ export default function TaskList() {
     if (filter == 'completed') return task.completed;
     return true; //for 'all'
   });
+
+  if (storageError) {
+    return (
+      <div>
+        {storageError}
+        <button onClick={() => setStorageError(null)}>Dimiss</button>
+      </div>
+    );
+  }
 
   return (
     <div>
