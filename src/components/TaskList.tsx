@@ -1,4 +1,3 @@
-import { error } from 'console';
 import { useEffect, useState } from 'react';
 
 type Task = {
@@ -32,7 +31,7 @@ export default function TaskList() {
       setStorageError('failed to load your task ....');
       setTasks([]);
     }
-  });
+  }, []);
 
   // save to localStorage whenever tasks change
 
