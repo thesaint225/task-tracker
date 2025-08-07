@@ -2,13 +2,9 @@ import { useState } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage ';
 import TaskInput from './TaskInput';
 import FilterController from './FilterController';
-import type { FilterType } from '../types';
-
-type Task = {
-  id: number;
-  title: string;
-  completed: boolean;
-};
+import type { FilterType } from '../Types/types';
+import type { Task } from '../Types/taskType';
+import TaskItem from './TaskItem';
 
 export default function TaskList() {
   const [tasks, setTasks] = useLocalStorage<Task[]>('tasks', []);
@@ -50,6 +46,17 @@ export default function TaskList() {
     <div>
       <TaskInput onAddTask={handleAddTask} />
       <FilterController currentType={filter} onFilterChange={setFilter} />
+      <ul>
+        {filterTasks.map((task) => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            onToggle={handleToggle}
+            onDelete={handleDeleteTask}
+            onEdit={handleEditTask}
+          />
+        ))}
+      </ul>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import type { FilterType } from '../types';
+import type { FilterType } from '../Types/types';
 
 type FilterControllerProps = {
   currentType: FilterType;
