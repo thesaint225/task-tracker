@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage ';
 import TaskInput from './TaskInput';
+import FilterController from './FilterController';
+import type { FilterType } from '../types';
 
 type Task = {
   id: number;
@@ -10,11 +12,11 @@ type Task = {
 
 export default function TaskList() {
   const [tasks, setTasks] = useLocalStorage<Task[]>('tasks', []);
-  const [filter, setFilter] = useState<filterType>('all');
+  const [filter, setFilter] = useState<FilterType>('all');
 
   const filterTasks = tasks.filter((task) => {
     if (filter === 'active') return !task.completed;
-    if (filter === 'complete') return task.completed;
+    if (filter === 'completed') return task.completed;
   });
 
   const handleAddTask = (title: string) => {
@@ -47,6 +49,7 @@ export default function TaskList() {
   return (
     <div>
       <TaskInput onAddTask={handleAddTask} />
+      <FilterController currentType={filter} onFilterChange={setFilter} />
     </div>
   );
 }
