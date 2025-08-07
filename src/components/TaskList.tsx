@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage ';
+import TaskInput from './TaskInput';
 
 type Task = {
   id: number;
@@ -33,5 +34,19 @@ export default function TaskList() {
     );
   };
 
-  return <div></div>;
+  const handleDeleteTask = (id: number) => {
+    setTasks((prev) => prev.filter((task) => task.id !== id));
+  };
+
+  const handleEditTask = (id: number, newTitle: string) => {
+    setTasks((prev) =>
+      prev.map((task) => (task.id === id ? { ...task, title: newTitle } : task))
+    );
+  };
+
+  return (
+    <div>
+      <TaskInput onAddTask={handleAddTask} />
+    </div>
+  );
 }
