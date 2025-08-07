@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import useLocalStorage from '../hooks/useLocalStoarage ';
+import useLocalStorage from '../hooks/useLocalStorage ';
 
 type Task = {
   id: number;
@@ -18,10 +18,19 @@ export default function TaskList() {
 
   const handleAddTask = (title: string) => {
     const newTask = {
-      id: Date.now,
+      id: Date.now(),
       title: title,
       completed: false,
     };
+    setTasks((prev) => [...prev, newTask]);
+  };
+
+  const handleToggle = (id: number) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, complete: !task.completed } : task
+      )
+    );
   };
 
   return <div></div>;
